@@ -15,8 +15,12 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "firebase": "^9.6.1",
+    "firebase-admin": "^10.0.1",
+    "google-auth-library": "^7.11.0",
     "joi": "^17.4.2",
     "pg": "^8.7.1",
+    "socket.io": "^4.4.0",
     "typeorm": "^0.2.36",
     "uniqid": "^5.3.0"
   },
