@@ -1,5 +1,5 @@
 import {Response, Request} from 'express';
-const { getMessages: getAllMessagesHandler } = require('./firebase/firebase.js')
+const { getMessages: getAllMessagesHandler } = require('./firebase/firebase.ts');
 
 const getAllMessages = async (req: Request, res: Response) => {
     if (res.statusCode === 403) res.send('Invalid credentials'); return;

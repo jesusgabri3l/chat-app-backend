@@ -22,13 +22,13 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 // eslint-disable-next-line
-const app = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
 const users = collection(firestore, 'users');
 const messages = collection(firestore, 'messages');
 
-const addUser = async (res) => {
+const addUser = async (res: any) => {
   try {
     await setDoc(doc(users, res.googleId), {
       id: res.googleId,
@@ -39,13 +39,13 @@ const addUser = async (res) => {
     console.error('Error adding document: ', e);
   }
 };
-const addMessage = async (res) => {
+const addMessage = async (res: any) => {
   try {
     await addDoc(messages, {
       ...res,
       timeStamp: Timestamp.fromDate(new Date(res.time)),
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
   }
 };
@@ -54,8 +54,8 @@ const getMessages = async () => {
     try{
       const q = query(messages, orderBy('timeStamp'));
         const messagesSnapShot = await getDocs(q);
-        const messagesArr = [];
-        messagesSnapShot.forEach((doc) => messagesArr.push(doc.data()));
+        const messagesArr: any = [];
+        messagesSnapShot.forEach((doc: any) => messagesArr.push(doc.data()));
         return messagesArr;
     }catch(e){
         console.log(e);
@@ -63,10 +63,10 @@ const getMessages = async () => {
     }
 };
 
-const checkUser = async (res) => {
+const checkUser = async (res: any) => {
   const userRef = doc(firestore, 'users', res.googleId);
   const userSnap = await getDoc(userRef);
   if (!userSnap.exists()) addUser(res);
 };
 
-module.exports = { app, firestore, checkUser, addMessage, getMessages };
+module.exports = { firebaseApp, firestore, checkUser, addMessage, getMessages };
