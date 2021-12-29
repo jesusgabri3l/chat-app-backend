@@ -1,12 +1,12 @@
 {
-  "name": "typescript-node-demo",
+  "name": "devvchat",
   "version": "1.0.0",
   "description": "",
   "main": "src/app.ts",
   "scripts": {
     "lint": "eslint src/*",
     "dev": "nodemon src/app.ts",
-    "build": "tsc && node dist/app.js"
+    "build": "tsc --build"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,9 @@
     "eslint": "^7.32.0",
     "nodemon": "^2.0.12",
     "ts-node": "^10.1.0",
-    "typescript": "^4.3.5"
-  }
+    "typescript": "^4.5.4"
+  },
+  "engines": {
+    "node": "16.13-0"
+  },
 }

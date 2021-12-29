@@ -7,7 +7,7 @@ const googleAuthenticationMiddleware = async (req: any, res: any, next: any) => 
   if(response) next();
   else { res.statusCode = 403; next(); }
 };
-router.use(googleAuthenticationMiddleware)
-router.get("/", getAllMessagesHandler);
+router.use(googleAuthenticationMiddleware);
+router.get('/', getAllMessagesHandler);
 
 module.exports = router;

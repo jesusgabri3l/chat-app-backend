@@ -11,7 +11,7 @@ const {
   query,
   orderBy,
   Timestamp,
-} = require("firebase/firestore");
+} = require('firebase/firestore');
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -54,14 +54,14 @@ const getMessages = async () => {
     try{
       const q = query(messages, orderBy('timeStamp'));
         const messagesSnapShot = await getDocs(q);
-        let messagesArr = [];
+        const messagesArr = [];
         messagesSnapShot.forEach((doc) => messagesArr.push(doc.data()));
         return messagesArr;
     }catch(e){
         console.log(e);
         return null;
     }
-}
+};
 
 const checkUser = async (res) => {
   const userRef = doc(firestore, 'users', res.googleId);
