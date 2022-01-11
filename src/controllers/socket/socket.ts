@@ -3,7 +3,7 @@ const { googleAuth: googleAuthMiddleware } = require('../auth/googleAuth');
 const {addMessage : addNewMessage} = require('../firebase/firebase');
 
 const io = require('socket.io')(server, {
-  cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] },
+  cors: { origin: 'https://jesusgabri3l.github.io/', methods: ['GET', 'POST'] },
 });
 // -- AUTH MIDDLEWARE --
 io.use(async (socket: any, next: any) => {
