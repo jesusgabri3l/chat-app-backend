@@ -1,21 +1,35 @@
-const {httpServer: server} = require('../../index');
-const { googleAuth: googleAuthMiddleware } = require('../auth/googleAuth');
-const {addMessage : addNewMessage} = require('../firebase/firebase');
+import type { Server as HttpServer } from 'http';
+import { Server } from 'socket.io';
+import { googleAuth } from '../auth/googleAuth';
+import { addMessage, checkUser } from '../firebase/firebase';
+import type { ChatMessage } from '../firebase/firebase';
 
-const io = require('socket.io')(server, {
-  cors: { origin: 'https://jesusgabri3l.github.io', methods: ['GET', 'POST'] },
-});
-// -- AUTH MIDDLEWARE --
-io.use(async (socket: any, next: any) => {
-  const token = socket.handshake.auth.token;
-  const response = await googleAuthMiddleware(token);
-  if (response) next();
-  else next(new Error('invalid credentials'));
-});
-
-io.on('connection', (socket: any) => {
-  socket.on('newMessage', async (newMessage: any) => {
-    await addNewMessage(newMessage);
-    socket.broadcast.emit('hasANewMessage', newMessage);
+export const registerSocketHandlers = (server: HttpServer) => {
+  const io = new Server(server, {
+    cors: { origin: process.env.CLIENT_ORIGIN, methods: ['GET', 'POST'] },
   });
-});
+
+  io.use(async (socket, next) => {
+    const token = socket.handshake.auth.token;
+    const payload = await googleAuth(token);
+    if (!payload || !payload.sub || !payload.email) {
+      next(new Error('invalid credentials'));
+      return;
+    }
+    await checkUser({
+      googleId: payload.sub,
+      givenName: payload.given_name ?? '',
+      email: payload.email,
+    });
+    next();
+  });
+
+  io.on('connection', (socket) => {
+    socket.on('newMessage', async (newMessage: ChatMessage) => {
+      await addMessage(newMessage);
+      socket.broadcast.emit('hasANewMessage', newMessage);
+    });
+  });
+
+  return io;
+};

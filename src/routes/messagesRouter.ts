@@ -1,13 +1,17 @@
-const router = require('express').Router();
-const {getAllMessages: getAllMessagesHandler} = require('../controllers/messagesController');
-const {googleAuth: googleAuthentication} = require('../controllers/auth/googleAuth');
+import { Router } from 'express';
+import type { NextFunction, Request, Response } from 'express';
+import { getAllMessages } from '../controllers/messagesController';
+import { googleAuth } from '../controllers/auth/googleAuth';
 
-const googleAuthenticationMiddleware = async (req: any, res: any, next: any) => {
-  const response = await googleAuthentication(req.headers.authorization);
-  if(response) next();
-  else { res.statusCode = 403; next(); }
+const router = Router();
+
+const requireGoogleAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const payload = await googleAuth(req.headers.authorization ?? '');
+  if (payload) next();
+  else res.status(403).send('Invalid credentials');
 };
-router.use(googleAuthenticationMiddleware);
-router.get('/', getAllMessagesHandler);
 
-module.exports = router;
+router.use(requireGoogleAuth);
+router.get('/', getAllMessages);
+
+export default router;

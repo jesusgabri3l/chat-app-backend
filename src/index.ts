@@ -1,25 +1,11 @@
-const dotenv = require('dotenv');
-const express = require('express');
-const cors = require('cors');
-const { createServer } = require('http');
+import dotenv from 'dotenv';
 
-dotenv.config({
-  path: '.env'
-});
+dotenv.config({ quiet: true });
 
-const app = express();
-const httpServer = createServer(app);
+import { httpServer } from './app';
+import { registerSocketHandlers } from './controllers/socket/socket';
 
-app.use(cors());
-app.use(express.json());
+registerSocketHandlers(httpServer);
 
-//ROUTES//
-const messagesRouter = require('./routes/messagesRouter');
-app.use('/api/messages', messagesRouter);
-
-((port = process.env.PORT || 5000) => {
-  httpServer.listen(port, () => console.log(`🚀 Server running on port ${port}`));
-})();
-
-module.exports = {express, httpServer};
-require('./controllers/socket/socket');
+const port = process.env.PORT || 5000;
+httpServer.listen(port, () => console.log(`🚀 Server running on port ${port}`));

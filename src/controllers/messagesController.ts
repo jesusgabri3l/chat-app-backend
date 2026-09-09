@@ -1,14 +1,8 @@
-import {Response, Request} from 'express';
-const { getMessages: getAllMessagesHandler } = require('./firebase/firebase');
+import type { Request, Response } from 'express';
+import { getMessages } from './firebase/firebase';
 
-const getAllMessages = async (req: Request, res: Response) => {
-    if (res.statusCode === 403) {
-        res.send('Invalid credentials'); 
-        return;
-    } 
-    const messages = await getAllMessagesHandler();
-    if(messages) res.send(messages);
-    else res.status(500);
+export const getAllMessages = async (_req: Request, res: Response) => {
+  const messages = await getMessages();
+  if (messages) res.send(messages);
+  else res.status(500).send('Could not load messages');
 };
-
-module.exports = { getAllMessages };
