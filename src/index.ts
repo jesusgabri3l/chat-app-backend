@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config({ quiet: true });
+import './env';
 
 import { httpServer } from './app';
 import { registerSocketHandlers } from './controllers/socket/socket';
